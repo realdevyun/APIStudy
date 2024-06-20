@@ -36,8 +36,8 @@ class MatchTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(homeTeamBadgeImageView)
-        contentView.addSubview(scoreLabel)
         contentView.addSubview(awayTeamBadgeImageView)
+        contentView.addSubview(scoreLabel)
         
         NSLayoutConstraint.activate([
             homeTeamBadgeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),

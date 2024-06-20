@@ -12,17 +12,28 @@ class TeamListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "K-League Teams"
         
+        setUpUI()
+        configureTableViewCell()
+        configureViewModel()
+        viewModel.fetchTeams()
+        
+    }
+    
+    private  func setUpUI() {
+        self.title = "2024 K League 1"
+    }
+    
+    private func configureTableViewCell() {
         tableView.register(TeamTableViewCell.self, forCellReuseIdentifier: TeamTableViewCell.identifier)
-
+    }
+    
+    private func configureViewModel() {
         viewModel.didUpdateTeams = { [weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
         }
-
-        viewModel.fetchTeams()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -42,7 +53,7 @@ class TeamListViewController: UITableViewController {
         let team = viewModel.teams[indexPath.row]
         let matchVC = MatchListViewController()
         matchVC.teamId = team.idTeam
-        matchVC.title = team.strTeamKorean
+        matchVC.title = "\(team.strTeamKorean ?? "") 최근 홈경기"
         navigationController?.pushViewController(matchVC, animated: true)
     }
 }
