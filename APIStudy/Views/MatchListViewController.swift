@@ -13,15 +13,14 @@ class MatchListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureTableViewCell()
+        configureTableView()
         configureViewModel()
         if let teamId = teamId {
             viewModel.fetchMatches(teamId: teamId)
         }
     }
     
-    private func configureTableViewCell() {
+    private func configureTableView() {
         tableView.register(MatchTableViewCell.self, forCellReuseIdentifier: MatchTableViewCell.identifier)
     }
     
@@ -31,6 +30,19 @@ class MatchListViewController: UITableViewController {
                 self?.tableView.reloadData()
             }
         }
+        
+        viewModel.didFailWithError = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showErrorAlert(error: error)
+            }
+        }
+    }
+    
+    private func showErrorAlert(error: AppError) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -45,5 +57,9 @@ class MatchListViewController: UITableViewController {
         cell.configure(with: match)
         cell.selectionStyle = .none
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

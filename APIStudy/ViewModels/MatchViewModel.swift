@@ -8,17 +8,22 @@
 import Foundation
 
 class MatchViewModel {
-    var matches: [Match] = []
+    var matches: [Match] = [] {
+        didSet {
+            didUpdateMatches?()
+        }
+    }
+    
     var didUpdateMatches: (() -> Void)?
-
+    var didFailWithError: ((AppError) -> Void)?
+    
     func fetchMatches(teamId: String) {
         NetworkService.shared.fetchTeamMatches(teamId: teamId) { [weak self] result in
             switch result {
             case .success(let matches):
                 self?.matches = matches
-                self?.didUpdateMatches?()
             case .failure(let error):
-                print("Error fetching matches: \(error)")
+                self?.didFailWithError?(error)
             }
         }
     }

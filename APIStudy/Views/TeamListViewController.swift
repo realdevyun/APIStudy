@@ -13,14 +13,14 @@ class TeamListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setUpUI()
+        setupUI()
         configureTableViewCell()
         configureViewModel()
         viewModel.fetchTeams()
         
     }
     
-    private  func setUpUI() {
+    private  func setupUI() {
         self.title = "2024 K League 1"
     }
     
@@ -34,6 +34,19 @@ class TeamListViewController: UITableViewController {
                 self?.tableView.reloadData()
             }
         }
+        
+        viewModel.didFailWithError = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showErrorAlert(error: error)
+            }
+        }
+    }
+    
+    private func showErrorAlert(error: AppError) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
