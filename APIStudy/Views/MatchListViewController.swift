@@ -9,7 +9,16 @@ import UIKit
 
 class MatchListViewController: UITableViewController {
     var teamId: String?
-    let viewModel = MatchViewModel()
+    let viewModel: MatchViewModel
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.viewModel = MatchViewModel(networkService: networkService)
+        super.init(style: .plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

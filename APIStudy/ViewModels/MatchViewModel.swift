@@ -8,6 +8,8 @@
 import Foundation
 
 class MatchViewModel {
+    private let networkService: NetworkServiceProtocol
+    
     var matches: [Match] = [] {
         didSet {
             didUpdateMatches?()
@@ -17,8 +19,12 @@ class MatchViewModel {
     var didUpdateMatches: (() -> Void)?
     var didFailWithError: ((AppError) -> Void)?
     
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
+    }
+    
     func fetchMatches(teamId: String) {
-        NetworkService.shared.fetchTeamMatches(teamId: teamId) { [weak self] result in
+        networkService.fetchTeamMatches(teamId: teamId) { [weak self] result in
             switch result {
             case .success(let matches):
                 self?.matches = matches

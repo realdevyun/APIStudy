@@ -8,8 +8,17 @@
 import UIKit
 
 class TeamListViewController: UITableViewController {
-    let viewModel = TeamViewModel()
-
+    let viewModel: TeamViewModel
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.viewModel = TeamViewModel(networkService: networkService)
+        super.init(style: .plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,11 +57,11 @@ class TeamListViewController: UITableViewController {
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.teams.count
     }
-
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TeamTableViewCell.identifier, for: indexPath) as? TeamTableViewCell else {
             return UITableViewCell()
@@ -61,10 +70,10 @@ class TeamListViewController: UITableViewController {
         cell.configure(with: team)
         return cell
     }
-
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let team = viewModel.teams[indexPath.row]
-        let matchVC = MatchListViewController()
+        let matchVC = MatchListViewController(networkService: viewModel.getNetworkService())
         matchVC.teamId = team.idTeam
         matchVC.title = "\(team.strTeamKorean ?? "") 최근 홈경기"
         navigationController?.pushViewController(matchVC, animated: true)

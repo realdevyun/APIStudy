@@ -8,6 +8,8 @@
 import Foundation
 
 class TeamViewModel {
+    private let networkService: NetworkServiceProtocol
+    
     var teams: [Team] = [] {
         didSet {
             didUpdateTeams?()
@@ -16,9 +18,17 @@ class TeamViewModel {
     
     var didUpdateTeams: (() -> Void)?
     var didFailWithError: ((AppError) -> Void)?
+    
+    init(networkService: NetworkServiceProtocol) {
+        self.networkService = networkService
+    }
+    
+    func getNetworkService() -> NetworkServiceProtocol {
+        return networkService
+    }
 
     func fetchTeams() {
-        NetworkService.shared.fetchKLeagueTeams { [weak self] result in
+        networkService.fetchKLeagueTeams { [weak self] result in
             switch result {
             case .success(let teams):
                 self?.teams = teams

@@ -8,9 +8,7 @@
 import Foundation
 import Alamofire
 
-class NetworkService {
-    static let shared = NetworkService()
-    private init() {}
+class NetworkService: NetworkServiceProtocol {
     
     let apiKey = "3"
     let baseUrl = "https://www.thesportsdb.com/api/v1/json"

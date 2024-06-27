@@ -15,11 +15,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        window = UIWindow(windowScene: windowScene)
-        let mainVC = TeamListViewController()
-        let naviVC = UINavigationController(rootViewController: mainVC)
+        let networkService = NetworkService()
+        let teamListVC = TeamListViewController(networkService: networkService)
+        let navigationController = UINavigationController(rootViewController: teamListVC)
         
-        window?.rootViewController = naviVC
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 
